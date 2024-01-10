@@ -14,8 +14,8 @@ import musicscan.cookies
 class WhatAPIExtended(whatapi.WhatAPI):
     # constructor
     def __init__(self, config_file=None, username=None, password=None, cookies=None, server=None, one_time_password=None):
-        otp = {'qr_confirm': one_time_password) if one_time_password is not None else {}
-        super().__init__(config_file, username, password, cookies, server, updated_payload=otp)
+        otp = {'qr_confirm': one_time_password} if one_time_password is not None else {}
+        super().__init__(config_file=config_file, username=username, password=password, cookies=cookies, server=server, update_payload=otp)
         # save cookies
         musicscan.cookies.save_cookies(self.session.cookies)
         # reset counters
@@ -141,7 +141,7 @@ class WhatAPIExtended(whatapi.WhatAPI):
 def get_username_and_password(config_file):
     config = ConfigParser()
     config.read(config_file)
-    username = config.get('login', 'username')
-    password = config.get('login', 'password')
-    one_time_password = config.get('login', 'one_time_password')
+    username = config.get('login', 'username', fallback=None)
+    password = config.get('login', 'password', fallback=None)
+    one_time_password = config.get('login', 'one_time_password', fallback=None)
     return (username, password, one_time_password)
