@@ -359,6 +359,12 @@ def main():
             metavar='USERNAME',
             help='your username'
     )
+    group_login.add_argument(
+            '-otp', '--one_time_password',
+            default=None,
+            metavar='one_time_password',
+            help='If 2FA is enabled for your account, provide the one time password',
+    )
     # parse arguments
     args = parser.parse_args()
     # set variables from args
@@ -368,6 +374,7 @@ def main():
     server = args.server
     username = args.username
     password = args.password
+    otp  = args.one_time_password
     output_path = args.output
     music_threshold = args.threshold
     reset_processed_dirs = args.reset
@@ -400,7 +407,7 @@ def main():
         config_file = None
     # temporary hack: parse config file (whatapi config parser broken for python3)
     else:
-        username, password = musicscan.api.get_username_and_password(config_file)
+        username, password, one_time_password = musicscan.api.get_username_and_password(config_file)
         config_file = None
     
     # connect to API
@@ -411,7 +418,8 @@ def main():
                 username=username,
                 password=password,
                 cookies=cookies,
-                server=server
+                server=server,
+                one_time_password=otp,
         )
     except Exception as e:
         print("API connection failed")
